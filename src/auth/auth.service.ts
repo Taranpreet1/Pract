@@ -2,19 +2,17 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
   UploadedFiles,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialDto } from './dto/auth-credentials.dto';
-// import * as jwt_decode from "jwt-decode";
 import jwt_decode from 'jwt-decode';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { v4 as uuid } from 'uuid';
 import * as crypto from 'crypto';
-
 import { JwtPayload } from './jwt-payload.interface';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserRepository } from 'src/user/user.repository';
@@ -22,33 +20,35 @@ import { User } from 'src/entity/user.entity';
 import { ForgetPasswordDto } from './dto/forget-paasword.dto';
 import { forgetPass } from './forget-Pass.interface';
 import { forget_password } from 'src/entity/forget-password.entity';
-
 import { ForgetPassWordRepository } from './forget-password.repository';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as config from 'config'
+import * as config from 'config';
 import { ProfilePicDto } from 'src/user/dto/profile-pic.dto';
-
+import { Cron } from '@nestjs/schedule';
 
 const mailConfig = config.get('email');
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(UserRepository)
     public readonly mailerService: MailerService,
     private userRepository: UserRepository,
     private jwtService: JwtService,
     private forgetPasswordRepository: ForgetPassWordRepository,
-    
   ) {}
 
-  async signUp(createUserDto: CreateUserDto,@UploadedFiles() files: ProfilePicDto,): Promise<void> {
-    return this.userRepository.createUser(createUserDto,files);
+  async signUp(
+    createUserDto: CreateUserDto,
+    @UploadedFiles() files: ProfilePicDto,
+  ): Promise<void> {
+    return this.userRepository.createUser(createUserDto, files);
   }
 
-  
   async signIn(
     authCredentialDto: AuthCredentialDto,
   ): Promise<{ accessToken: string }> {
@@ -71,7 +71,6 @@ export class AuthService {
     return this.userRepository.getUser();
   }
 
-  
   async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
     const { email } = forgetPasswordDto;
     const user = await this.userRepository.findOne({ email });
@@ -100,34 +99,31 @@ export class AuthService {
     row.createTime = new Date();
     row.updateTime = new Date();
 
-
     const mailOptions = {
       // host: mailConfig.host,
       // host:
       from: mailConfig.user,
-      
+
       to: email,
       subject: 'Reset your password',
       text: 'hello here the mail for reset password.',
     };
-    console.log(mailConfig.host,mailConfig.user)
+    console.log(mailConfig.host, mailConfig.user);
 
     // this.mailerService.sendMail(mailOptions)
-      // this.mailerService.sendMail({
-      //   to: "taranpreetsinghsaluja@gmail.com",
-      //   from: mailConfig.from,
-      //   subject: `Email Verification`,
-      //   text: "hello",
-      //   html: "hello",
-      // })
-      // .then((res) => {
-      //   console.log('res', res);
-      // })
-      // .catch((err) => {
-      //   console.log('err', err);
-      // });
-
-
+    // this.mailerService.sendMail({
+    //   to: "taranpreetsinghsaluja@gmail.com",
+    //   from: mailConfig.from,
+    //   subject: `Email Verification`,
+    //   text: "hello",
+    //   html: "hello",
+    // })
+    // .then((res) => {
+    //   console.log('res', res);
+    // })
+    // .catch((err) => {
+    //   console.log('err', err);
+    // });
 
     try {
       await row.save();
@@ -192,11 +188,18 @@ export class AuthService {
   async createUser(createUserDto: CreateUserDto, user: User): Promise<void> {
     return this.userRepository.createNewUser(createUserDto, user);
   }
+
+  @Cron('45 * * * * *')  
+       // * * * * * *
+       // | | | | | |
+       // | | | | | day of week
+       // | | | | month
+       // | | | day of month
+       // | | hour
+       // | minute
+       // second (optional)
+  
+  handleCron() {
+    this.logger.debug('Called when the current second is 45');
+  }
 }
-
-
-
-
-
-
-

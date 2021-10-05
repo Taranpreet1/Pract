@@ -48,7 +48,7 @@ export class User extends BaseEntity {
   @Column('timestamp with time zone', { name: 'updated_date', nullable: true })
   updatedDate: Date | null;
 
-  @ManyToOne((_type) => Role, (role) => role.id, { eager: true })
+  @ManyToOne((_type) => Role, (role) => role.user_role, { eager: true })
   @JoinColumn([{ name: 'role_id', referencedColumnName: 'id' }])
   role: Role;
 
@@ -69,21 +69,10 @@ export class User extends BaseEntity {
   @OneToMany(() => User, (user) => user.updatedBy2)
   users2: User[];
 
-  @Column("character varying", {
-		name: "profile_pic",
-		nullable: true,
-		length: 255,
-	})
-	profilePic: string | null;
-
-
-
+  @Column('character varying', {
+    name: 'profile_pic',
+    nullable: true,
+    length: 255,
+  })
+  profilePic: string | null;
 }
-
-
-
-
-
-
-
-

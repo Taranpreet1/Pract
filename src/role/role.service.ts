@@ -6,13 +6,12 @@ import { rolerepository } from './role.repository';
 
 @Injectable()
 export class RoleService {
+  constructor(
+    @InjectRepository(rolerepository)
+    private Rolerepository: rolerepository,
+  ) {}
 
-    constructor(
-        @InjectRepository(rolerepository)
-        
-        private Rolerepository:rolerepository,){}
-
-    createRole(createRoleDto:CreateRoleDto): Promise<Role>{
-        return this.Rolerepository.createRole(createRoleDto);
-    }
+  createRole(createRoleDto: CreateRoleDto): Promise<Role> {
+    return this.Rolerepository.createRole(createRoleDto);
+  }
 }

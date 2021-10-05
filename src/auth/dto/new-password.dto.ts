@@ -1,5 +1,5 @@
 import { IsNotEmpty, MinLength, MaxLength, Matches } from 'class-validator';
-import { IsEqualTo } from 'src/password.decorator';
+import { IsEqualTo } from 'src/decorator/password.decorator';
 
 export class NewPasswordDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {

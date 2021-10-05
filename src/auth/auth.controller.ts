@@ -4,7 +4,6 @@ import {
   Get,
   Headers,
   HttpCode,
-  Param,
   Post,
   Query,
   Req,
@@ -16,12 +15,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { Role } from 'src/entity/role.entity';
 import { User } from 'src/entity/user.entity';
 import { UserRole } from 'src/enum/user-role.enum';
-import { Roles } from 'src/guard/role.decorator';
+import { Roles } from 'src/decorator/role.decorator';
 import { RolesGuard } from 'src/guard/role.guard';
-import { SiteUrl } from 'src/site-url.decorator';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { ProfilePicDto } from 'src/user/dto/profile-pic.dto';
 import { AuthService } from './auth.service';
@@ -30,7 +27,7 @@ import { editFileName, imageFileFilter } from './dto/file-validator';
 import { ForgetPasswordDto } from './dto/forget-paasword.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { GetUser } from './get-user.decorator';
+import { GetUser } from '../decorator/get-user.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -46,25 +43,22 @@ export class AuthController {
   @ApiResponse({ status: 500, description: 'Internal server error!' })
   @HttpCode(200)
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        			{ name: "profile_pic", maxCount: 1 }
-        		],
-        		{
-        			storage: diskStorage({
-        				destination: "./assets/profile",
-        				filename: editFileName,
-        			}),
-        			fileFilter: imageFileFilter,
-        			limits:{fileSize:2097152}
-        		},
-
-    )
+    FileFieldsInterceptor([{ name: 'profile_pic', maxCount: 1 }], {
+      storage: diskStorage({
+        destination: './assets/profile',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+      limits: { fileSize: 2097152 },
+    }),
   )
-  
-  
-  signUp(@Body() createUserDto: CreateUserDto,@UploadedFiles() files: ProfilePicDto, @Req() req, @Headers("wl_code") wlCode: any = 1 ): Promise<void> {
-    return this.authService.signUp(createUserDto,files);
+  signUp(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFiles() files: ProfilePicDto,
+    @Req() req,
+    @Headers('wl_code') wlCode: any = 1,
+  ): Promise<void> {
+    return this.authService.signUp(createUserDto, files);
   }
 
   @Post('/signin')
@@ -82,7 +76,7 @@ export class AuthController {
   }
 
   @Get()
-  @UseGuards(AuthGuard(),RolesGuard)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get all accounts of user' })
   @ApiResponse({ status: 200, description: 'Api success' })
@@ -133,8 +127,11 @@ export class AuthController {
   @HttpCode(200)
   createUser(
     @Body() createUserDto: CreateUserDto,
-    @GetUser() user: User,
+    @GetUser() user: User, //the logged_in user_id is store in created_by field
   ): Promise<void> {
     return this.authService.createUser(createUserDto, user);
   }
 }
+
+
+

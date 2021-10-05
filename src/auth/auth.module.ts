@@ -7,33 +7,21 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStratergy } from './jwt.strategy';
 import { UserRepository } from 'src/user/user.repository';
 import { ForgetPassWordRepository } from './forget-password.repository';
-import { typeOrmConfig } from 'config/typeorm.config';
-import { MailerModule } from '@nestjs-modules/mailer';
 import * as config from 'config';
+import { MulterModule } from '@nestjs/platform-express';
 
-const mailConfig = config.get('email');
-
-
+const jwtConfig = config.get('jwt');
 @Module({
   imports: [
-    // TypeOrmModule.forRoot(typeOrmConfig),
-    // MailerModule.forRoot({
-    //   transport: {
-    //     host: mailConfig.host,
-    //     port: mailConfig.port,
-    //     auth: {
-    //       user: mailConfig.user,
-    //       pass: mailConfig.pass,
-    //     },
-    //   },
-    // }),
 
-
+    MulterModule.register({
+			dest: "./assets",
+		}),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'topSecret51',
+      secret: jwtConfig.SecretKey,
       signOptions: {
-        expiresIn: 3600,
+        expiresIn:jwtConfig.ExpireIn
       },
     }),
     TypeOrmModule.forFeature([UserRepository, ForgetPassWordRepository]),

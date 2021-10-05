@@ -17,15 +17,14 @@ db:
   database: 'pract'
   password: 'postgres'
   
-
 jwt:
-  ExpireIn: 604800
-  SecretKey: 'mySecre@tKey'
+  ExpireIn: 3600
+  SecretKey: 'Taranstopsecret@1'
 
 email:
-  # host: 'smtpout.secureserver.net'
-  # user: 'taranpreet@itoneclick.com'
-  # pass: 
+  host: 'smtpout.secureserver.net'
+  user: 'rt@itoneclick.com'
+  pass: 
   port: 465
   secure: true
 

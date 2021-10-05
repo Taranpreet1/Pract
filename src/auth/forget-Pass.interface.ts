@@ -1,4 +1,4 @@
-export interface forgetPass{
-    email:string;
-    tokenhash:string;
+export interface forgetPass {
+  email: string;
+  tokenhash: string;
 }

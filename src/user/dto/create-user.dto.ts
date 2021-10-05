@@ -1,11 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
-import { PrimaryGeneratedColumn, Unique } from "typeorm";
 
 export class CreateUserDto{
 
-    // @IsNotEmpty()
-    // user_id: string;
 
     @IsNotEmpty()
     first_name: string;
@@ -38,7 +35,6 @@ export class CreateUserDto{
     @IsNotEmpty()
     role_id;
 
-    // @IsUUID()
     created_by:string;
 
     @ApiPropertyOptional({

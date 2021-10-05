@@ -27,7 +27,7 @@ export class UserRepository extends Repository<User> {
       profile_pic,
     } = createUserDto;
 
-    //hash the password
+    //hash the password we are using bcrypt with a salt
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -51,8 +51,8 @@ export class UserRepository extends Repository<User> {
 
       // const user = new User();
       // user.userId = uuid();
-      // if (typeof files.profile_pic != "undefined")
-      //   user.profilePic = files.profile_pic[0].filename;
+      // // if (typeof files.profile_pic != "undefined")
+      //   user.profilePic = files.profile_pic.filename;
       // user.role_id = role_id;
       // user.email = email;
       // user.firstName = first_name;
@@ -71,8 +71,7 @@ export class UserRepository extends Repository<User> {
 
 
 
-    // if (typeof files.profile_pic != "undefined")
-    // user.profilePic = files.profile_pic[0].filename;
+    
    
 
     //imp for unique user name we genrate a rendom message
@@ -85,7 +84,6 @@ export class UserRepository extends Repository<User> {
         console.log(error);
         throw new InternalServerErrorException();
       }
-      // console.log(error.code);
     }
   }
 
@@ -105,8 +103,6 @@ export class UserRepository extends Repository<User> {
   }
 
   async createNewUser(createUserDto: CreateUserDto, user:User): Promise<void> {
-    
-    // user.userId
 
     const {
       first_name,
@@ -116,7 +112,6 @@ export class UserRepository extends Repository<User> {
       password,
       phone_no,
       role_id,
-    //   created_by=user.userId,
     } = createUserDto;
 
     
