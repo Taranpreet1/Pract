@@ -1,0 +1,33 @@
+#
+# Created on Tue sep 30 2021
+#
+# @Auther:- taranpreet singh
+# Copyright (c) 2021 Oneclick
+# my variables are ${myvar1} and ${myvar2}
+#
+
+server:
+  port: 3000
+
+db:
+  type: 'postgres'
+  port: 5432
+  username: 'postgres'
+  host: 'localhost'
+  database: 'pract'
+  password: 'postgres'
+  
+
+jwt:
+  ExpireIn: 604800
+  SecretKey: 'mySecre@tKey'
+
+email:
+  # host: 'smtpout.secureserver.net'
+  # user: 'taranpreet@itoneclick.com'
+  # pass: 
+  port: 465
+  secure: true
+
+Sentry:
+  DSN: 'https://ae1830da5d4744fa9a03efeff65d68c7@o399378.ingest.sentry.io/5256424'

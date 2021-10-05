@@ -1,0 +1,14 @@
+#
+# Created on Tue sep 30 2021
+#
+# @Auther:- taranpreet singh
+# Copyright (c) 2021 Oneclick
+# my variables are ${myvar1} and ${myvar2}
+#
+
+# db:
+#     synchronize: true
+
+# jwt:
+#     secret: 'topSecret51'
+
