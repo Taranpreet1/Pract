@@ -18,7 +18,8 @@ export class rolerepository extends Repository<Role> {
     try {
       await this.save(Role);
       return Role;
-    } catch (error) {
+    } catch (error){
+      console.log(error,error.code)
       if (error) {
         throw new ConflictException('Role must be USER or ADMIN');
       } else {

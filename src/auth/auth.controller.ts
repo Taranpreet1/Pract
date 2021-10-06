@@ -28,6 +28,7 @@ import { ForgetPasswordDto } from './dto/forget-paasword.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GetUser } from '../decorator/get-user.decorator';
+import { SiteUrl } from 'src/decorator/site-url.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -76,8 +77,8 @@ export class AuthController {
   }
 
   @Get()
-  @UseGuards(AuthGuard(), RolesGuard)
-  @Roles(UserRole.ADMIN)
+  // @UseGuards(AuthGuard(), RolesGuard)
+  // @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get all accounts of user' })
   @ApiResponse({ status: 200, description: 'Api success' })
   @ApiResponse({ status: 422, description: 'Bad Request or API error message' })
@@ -131,6 +132,24 @@ export class AuthController {
   ): Promise<void> {
     return this.authService.createUser(createUserDto, user);
   }
+
+
+  // @Get("/profile")
+	// @ApiOperation({ summary: "Get Profile Details" })
+	// @HttpCode(200)
+	// @ApiResponse({ status: 200, description: "Api success" })
+	// @ApiResponse({ status: 401, description: "Please login to continue." })
+	// @ApiResponse({ status: 406, description: "Please Verify Your Email Id" })
+	// @ApiResponse({ status: 422, description: "Bad Request or API error message" })
+	// @ApiResponse({
+	// 	status: 404,
+	// 	description:
+	// 		"User Details not found!, [Invalid user id! Please enter correct user id]",
+	// })
+	// @ApiResponse({ status: 500, description: "Internal server error!" })
+	// async getProfile(@GetUser() user: User, @SiteUrl() siteUrl: string) {
+	// 	return await this.authService.getProfile(user, siteUrl);
+	// }
 }
 
 

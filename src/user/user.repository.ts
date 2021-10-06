@@ -2,13 +2,17 @@ import {
   BadGatewayException,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
-import { EntityRepository, In, Repository } from 'typeorm';
+import { EntityRepository, getManager, In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entity/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuid } from 'uuid';
 import { ProfilePicDto } from './dto/profile-pic.dto';
+import { Role } from 'src/entity/role.entity';
+import { UserRole } from 'src/enum/user-role.enum';
+import { profile } from 'console';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -31,9 +35,6 @@ export class UserRepository extends Repository<User> {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    
-    
-
     const user = this.create({
       userId: uuid(),
       firstName: first_name,
@@ -44,35 +45,9 @@ export class UserRepository extends Repository<User> {
       salt: salt,
       phoneNo: phone_no,
       role_id: role_id,
-      // profilePic:files.profile_pic[0].filename,
-      profilePic:profile_pic
+      // profilePic:profile_pic
+      profilePic:files.profile_pic[0].filename,
       });
-
-
-      // const user = new User();
-      // user.userId = uuid();
-      // // if (typeof files.profile_pic != "undefined")
-      //   user.profilePic = files.profile_pic.filename;
-      // user.role_id = role_id;
-      // user.email = email;
-      // user.firstName = first_name;
-      // user.lastName = last_name;
-      // user.salt = salt;
-      // user.phoneNo = phone_no;
-      // user.createdDate = new Date();
-      // user.updatedDate = new Date();
-      // user.password = hashedPassword;
-      // const userdata = await this.create(user);
-
-
-
-
-
-
-
-
-    
-   
 
     //imp for unique user name we genrate a rendom message
     try {
@@ -101,6 +76,34 @@ export class UserRepository extends Repository<User> {
       }
     }
   }
+
+  // async getUserDetails():Promise<User[]>{
+  //   const query = this.createQueryBuilder('user');
+  //   query.leftJoinAndSelect('user.role', 'role');
+  //   try {
+      
+  //     const user = await query.getMany();
+  //     const address = `localhost:3000/assets/profile${ProfilePic}`
+
+      
+      
+  //     let newuser:any 
+  //     newuser = user.map( value=> )
+
+
+  //     return newuser;
+
+  //   } catch (error) {
+  //     if (error) {
+  //       throw new BadGatewayException('Not able to fetch data plese try again');
+  //     } else {
+  //       throw new InternalServerErrorException();
+  //     }
+  //   }
+  // }
+
+
+
 
   async createNewUser(createUserDto: CreateUserDto, user:User): Promise<void> {
 
@@ -142,6 +145,10 @@ export class UserRepository extends Repository<User> {
       }
     }
   }
+
+
+
+  
 
 
 

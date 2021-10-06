@@ -7,6 +7,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { typeOrmConfig } from 'config/typeorm.config';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as config from 'config';
+import { chatGateWay } from './chat/chat.gateway';
 
 const mailConfig = config.get('email');
 
@@ -15,18 +16,9 @@ const mailConfig = config.get('email');
     ScheduleModule.forRoot(),
 
     TypeOrmModule.forRoot(typeOrmConfig),
-    MailerModule.forRoot({
-      transport: {
-        host: mailConfig.host,
-        port: mailConfig.port,
-        auth: {
-          user: mailConfig.user,
-          pass: mailConfig.pass,
-        },
-      },
-    }),
+    
 
-    //  TypeOrmModule.forRoot(typeOrmConfig),
+    
     // TypeOrmModule.forRoot({
     //   type:'postgres',
     //   host:'localhost',
@@ -38,20 +30,13 @@ const mailConfig = config.get('email');
     //   synchronize:true,
     // }),
 
-    // MailerModule.forRoot({
-    //   transport: {
-    //     host: mailConfig.host,
-    //     port: mailConfig.port,
-    //     auth: {
-    //       user: mailConfig.user,
-    //       pass: mailConfig.pass,
-    //     },
-    //   },
-    // }),
+    
 
     AuthModule,
     UserModule,
     RoleModule,
+    
   ],
+  providers: [chatGateWay,]
 })
 export class AppModule {}

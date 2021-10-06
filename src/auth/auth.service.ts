@@ -27,6 +27,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import * as config from 'config';
 import { ProfilePicDto } from 'src/user/dto/profile-pic.dto';
 import { Cron } from '@nestjs/schedule';
+import { UserRole } from 'src/enum/user-role.enum';
+import { errorMessage } from 'src/exceptions/common.config';
 
 const mailConfig = config.get('email');
 
@@ -71,6 +73,19 @@ export class AuthService {
     return this.userRepository.getUser();
   }
 
+  // async getProfile(user, siteUrl) {
+  //   // const userId = user.userId;
+	// 	try {
+	// 		const roleId = [
+	// 			UserRole.ADMIN,
+	// 			UserRole.USER,
+				
+	// 		];
+	// 		return this.userRepository.getUserDetails(/*userId,*/ siteUrl,roleId);
+	// 	} catch (error) {
+	// 		throw new InternalServerErrorException(errorMessage);
+	// 	}
+  // }
   async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
     const { email } = forgetPasswordDto;
     const user = await this.userRepository.findOne({ email });
@@ -129,7 +144,6 @@ export class AuthService {
       await row.save();
       console.log(resetLink);
     } catch (error) {
-      // console.log(error)
       throw new InternalServerErrorException(
         `Oops. Something went wrong. Please try again.`,
       );
@@ -189,7 +203,7 @@ export class AuthService {
     return this.userRepository.createNewUser(createUserDto, user);
   }
 
-  @Cron('45 * * * * *')  
+  // @Cron('45 * * * * *')  
        // * * * * * *
        // | | | | | |
        // | | | | | day of week
@@ -199,7 +213,7 @@ export class AuthService {
        // | minute
        // second (optional)
   
-  handleCron() {
-    this.logger.debug('Called when the current second is 45');
-  }
+  // handleCron() {
+  //   this.logger.debug('Called when the current second is 45');
+  // }
 }
